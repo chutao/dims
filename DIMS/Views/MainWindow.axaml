@@ -1,0 +1,114 @@
+<Window
+    x:Class="DIMS.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:DIMS.Views"
+    xmlns:vm="clr-namespace:DIMS.ViewModels"
+    Title="设备信息管理系统V1.0"
+    d:DesignHeight="768"
+    d:DesignWidth="1024"
+    x:DataType="vm:MainViewModel"
+    FontFamily="Microsoft YaHei UI"
+    Icon="/Assets/avalonia-logo.ico"
+    WindowStartupLocation="CenterScreen"
+    WindowState="Maximized"
+    mc:Ignorable="d">
+
+    <Design.DataContext>
+        <!--
+            This only sets the DataContext for the previewer in an IDE,
+            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
+        -->
+        <vm:MainViewModel />
+    </Design.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--  页头  -->
+        <Grid Margin="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="400" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Image
+                Grid.Column="0"
+                Source="avares://DIMS/Assets/logo.png"
+                Stretch="Fill" />
+
+            <Button
+                x:Name="Run"
+                Grid.Column="2"
+                Width="64"
+                Height="64"
+                Margin="20,3"
+                i:Attached.Icon="fa-play"
+                FontSize="48"
+                Foreground="Green" />
+
+            <Button
+                x:Name="Stop"
+                Grid.Column="3"
+                Width="64"
+                Height="64"
+                Margin="20,3"
+                i:Attached.Icon="fa-stop"
+                FontSize="48"
+                Foreground="Red" />
+
+            <Button
+                x:Name="Settings"
+                Grid.Column="4"
+                Width="64"
+                Height="64"
+                Margin="20,3"
+                i:Attached.Icon="fa-gear"
+                FontSize="48" />
+        </Grid>
+
+        <!--  内容  -->
+        <Border
+            Grid.Row="1"
+            BorderBrush="Gray"
+            BorderThickness="1">
+            <views:MainView />
+        </Border>
+
+        <!--  页脚  -->
+        <Grid Grid.Row="2" Background="WhiteSmoke">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock
+                x:Name="Message"
+                Grid.Column="0"
+                Margin="1"
+                VerticalAlignment="Center" />
+
+            <TextBlock
+                Grid.Column="4"
+                Margin="1"
+                VerticalAlignment="Center"
+                Background="LightGray"
+                FontStyle="Italic"
+                Foreground="DarkGray"
+                Text="WuHan Xinhao Intelligent Ltd. Copyright 2023" />
+        </Grid>
+    </Grid>
+</Window>

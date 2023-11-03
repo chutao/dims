@@ -1,0 +1,249 @@
+<Window
+    x:Class="DIMS.Views.SettingsView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helpers="using:DIMS.Helpers"
+    xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:DIMS.ViewModels"
+    Title="参数对话框"
+    Width="800"
+    Height="600"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:DataType="vm:SettingsViewModel"
+    Background="WhiteSmoke"
+    CanResize="False"
+    Topmost="True"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+
+    <Design.DataContext>
+        <!--
+            This only sets the DataContext for the previewer in an IDE,
+            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
+        -->
+        <vm:SettingsViewModel />
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="HeaderedContentControl">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border
+                                Margin="10,0,0,0"
+                                Padding="5,0,5,0"
+                                Background="White"
+                                ZIndex="1">
+                                <TextBlock Text="{TemplateBinding Header}" TextBlock.FontWeight="Bold" />
+                            </Border>
+                            <Border
+                                Grid.RowSpan="2"
+                                Grid.ColumnSpan="2"
+                                Margin="1,10,0,0"
+                                BorderBrush="LightGray"
+                                BorderThickness="1">
+                                <ContentPresenter Content="{TemplateBinding Content}" />
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Styles>
+
+
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0">
+            <StackPanel Orientation="Vertical">
+                <HeaderedContentControl Margin="10" Header="通讯参数">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="控制器IP地址:" />
+                        <TextBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="{Binding PlcAddress}" />
+
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="控制器端口号:" />
+                        <TextBox
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="{Binding PlcPort}" />
+
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="托盘扫码器IP地址:" />
+                        <TextBox
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="{Binding TrayScannerAddress}" />
+
+                        <TextBlock
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="托盘扫玛器端口号:" />
+                        <TextBox
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="{Binding TrayScannerPort}" />
+
+                        <TextBlock
+                            Grid.Row="4"
+                            Grid.Column="0"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="产品扫码器IP地址:" />
+                        <TextBox
+                            Grid.Row="4"
+                            Grid.Column="1"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="{Binding ProductScannerAddress}" />
+
+                        <TextBlock
+                            Grid.Row="5"
+                            Grid.Column="0"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="产品扫码器端口号:" />
+                        <TextBox
+                            Grid.Row="5"
+                            Grid.Column="1"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="{Binding ProductScannerPort}" />
+                    </Grid>
+                </HeaderedContentControl>
+
+                <HeaderedContentControl Margin="10" Header="软件参数">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="查询服务监听端口:" />
+                        <TextBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="{Binding ListenPort}" />
+
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="托盘队列长度:" />
+                        <TextBox
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="{Binding LineCapacity}" />
+                    </Grid>
+                </HeaderedContentControl>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border
+            Grid.Row="1"
+            Height="3"
+            Margin="10"
+            VerticalAlignment="Center"
+            Background="Gray" />
+
+        <DockPanel Grid.Row="2" LastChildFill="False">
+            <Button
+                Width="80"
+                Height="40"
+                Margin="10,3"
+                Command="{Binding ConfirmCommand}"
+                Content="确认"
+                DockPanel.Dock="Right" />
+            <Button
+                Width="80"
+                Height="40"
+                Margin="10,3"
+                Command="{Binding CancelCommand}"
+                Content="取消"
+                DockPanel.Dock="Right" />
+
+            <Button
+                Width="80"
+                Height="40"
+                Margin="10,3"
+                Command="{Binding LoadDefaultCommand}"
+                Content="默认"
+                DockPanel.Dock="Left" />
+        </DockPanel>
+    </Grid>
+
+</Window>

@@ -1,0 +1,6 @@
+[Bb]uild/
+.vs/
+.vscode/
+bin/
+obj/
+

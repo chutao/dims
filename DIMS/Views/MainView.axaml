@@ -1,0 +1,156 @@
+<UserControl
+    x:Class="DIMS.Views.MainView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:helper="using:DIMS.Helpers"
+    xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:views="clr-namespace:DIMS.Views"
+    xmlns:vm="clr-namespace:DIMS.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:CompileBindings="False"
+    x:DataType="vm:MainViewModel"
+    mc:Ignorable="d">
+    <Design.DataContext>
+        <!--
+            This only sets the DataContext for the previewer in an IDE,
+            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
+        -->
+        <vm:MainViewModel />
+    </Design.DataContext>
+
+    <UserControl.Resources>
+        <helper:LogLevelToIconConverter x:Key="LogLevelConverter" />
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="200" />
+        </Grid.RowDefinitions>
+
+        <Border
+            Grid.Row="0"
+            Grid.Column="0"
+            Margin="3"
+            BorderBrush="Gray"
+            BorderThickness="1">
+            <TabControl>
+                <TabItem Header="状态信息">
+                    <views:MonitorView x:Name="Monitor" />
+                </TabItem>
+
+                <TabItem Header="数据库管理">
+                    <views:DatabaseView x:Name="Database" />
+                </TabItem>
+            </TabControl>
+        </Border>
+
+        <DockPanel
+            Grid.Row="0"
+            Grid.Column="1"
+            Margin="3"
+            LastChildFill="True">
+            <WrapPanel
+                Background="Bisque"
+                DockPanel.Dock="Right"
+                Orientation="Vertical">
+                <Button
+                    x:Name="ClearQueue"
+                    Width="48"
+                    Height="48"
+                    Margin="5"
+                    i:Attached.Icon="fa-solid fa-broom"
+                    FontSize="32" />
+
+                <Button
+                    x:Name="DeleteSelected"
+                    Width="48"
+                    Height="48"
+                    Margin="5"
+                    i:Attached.Icon="fa-regular fa-trash-can"
+                    FontSize="32" />
+            </WrapPanel>
+
+            <DataGrid
+                x:Name="Queue"
+                AutoGenerateColumns="False"
+                CanUserReorderColumns="False"
+                CanUserSortColumns="False"
+                FontSize="14"
+                IsReadOnly="True"
+                VerticalScrollBarVisibility="Visible">
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Width="60"
+                        Binding="{Binding Index}"
+                        Header="ID" />
+                    <DataGridTextColumn
+                        Width="200"
+                        Binding="{Binding Rfid}"
+                        Header="产品条码" />
+                    <DataGridTextColumn
+                        Width="150"
+                        Binding="{Binding TrayCode}"
+                        Header="托盘条码" />
+                    <DataGridTextColumn
+                        Width="150"
+                        Binding="{Binding Model}"
+                        Header="机型代号" />
+                    <DataGridTextColumn
+                        Width="100"
+                        Binding="{Binding Product}"
+                        Header="机型系列" />
+                    <DataGridTextColumn
+                        Width="100"
+                        Binding="{Binding ModelIndex}"
+                        Header="机型编号" />
+                    <DataGridCheckBoxColumn
+                        Width="100"
+                        Binding="{Binding IsExist}"
+                        Header="再次进入" />
+                    <DataGridTextColumn
+                        Width="100"
+                        Binding="{Binding CurrentWorkstation}"
+                        Header="当前工位" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+
+        <DataGrid
+            x:Name="LoggerWindow"
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            Margin="3"
+            CanUserReorderColumns="False"
+            CanUserSortColumns="False"
+            IsReadOnly="True"
+            ScrollViewer.VerticalScrollBarVisibility="Visible"
+            SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="100" Header="消息级别">
+                    <DataTemplate>
+                        <i:Icon FontSize="12" Value="{Binding LogLevel, Converter={StaticResource LogLevelConverter}}" />
+                    </DataTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn
+                    Width="200"
+                    Binding="{Binding TimeStamp}"
+                    Header="时间戳" />
+                <DataGridTextColumn
+                    Width="*"
+                    Binding="{Binding Message}"
+                    Header="消息" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </Grid>
+</UserControl>

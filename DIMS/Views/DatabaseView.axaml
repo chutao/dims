@@ -1,0 +1,385 @@
+<UserControl
+    x:Class="DIMS.Views.DatabaseView"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="clr-namespace:Projektanker.Icons.Avalonia;assembly=Projektanker.Icons.Avalonia"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:DIMS.ViewModels"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    x:CompileBindings="False"
+    x:DataType="vm:DatabaseViewModel"
+    Background="WhiteSmoke"
+    mc:Ignorable="d">
+    <Design.DataContext>
+        <!--
+            This only sets the DataContext for the previewer in an IDE,
+            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs)
+        -->
+        <vm:DatabaseViewModel />
+    </Design.DataContext>
+    <DockPanel LastChildFill="True">
+        <WrapPanel
+            Margin="3"
+            Background="GhostWhite"
+            DockPanel.Dock="Right"
+            Orientation="Vertical">
+            <Button
+                x:Name="InsertButton"
+                Width="48"
+                Height="48"
+                Margin="5"
+                i:Attached.Icon="fa-solid fa-file-circle-plus"
+                FontSize="32"
+                ToolTip.Tip="插入新的数据库记录" />
+            <Button
+                x:Name="DeleteButton"
+                Width="48"
+                Height="48"
+                Margin="5"
+                i:Attached.Icon="fa-solid fa-trash-can"
+                FontSize="32"
+                ToolTip.Tip="删除指定数据库记录" />
+            <Button
+                x:Name="ModifyButton"
+                Width="48"
+                Height="48"
+                Margin="5"
+                i:Attached.Icon="fa-solid fa-pen-to-square"
+                FontSize="32"
+                ToolTip.Tip="更新数据库记录" />
+            <Button
+                x:Name="QueryButton"
+                Width="48"
+                Height="48"
+                Margin="5"
+                i:Attached.Icon="fa-solid fa-binoculars"
+                FontSize="32"
+                ToolTip.Tip="根据条件查询数据库记录" />
+
+            <Button
+                x:Name="ClearButton"
+                Width="48"
+                Height="48"
+                Margin="5"
+                i:Attached.Icon="fa-solid fa-eraser"
+                FontSize="32"
+                ToolTip.Tip="清除查询条件" />
+
+            <Separator />
+
+            <Button
+                x:Name="ImportButton"
+                Width="48"
+                Height="48"
+                Margin="5"
+                i:Attached.Icon="fa-solid fa-file-import"
+                FontSize="32"
+                IsVisible="False"
+                ToolTip.Tip="导入产品数据到数据库" />
+        </WrapPanel>
+
+        <TabControl
+            x:Name="TabContainer"
+            MinHeight="200"
+            Margin="3"
+            DockPanel.Dock="Top">
+            <TabItem Header="设备信息">
+                <Border BorderBrush="LightGray" BorderThickness="1">
+                    <Grid Margin="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="设备编号" />
+                        <TextBox
+                            x:Name="DeviceId"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="10,3"
+                            VerticalAlignment="Center" />
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="4"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="设备名称" />
+                        <TextBox
+                            x:Name="DeviceName"
+                            Grid.Row="0"
+                            Grid.Column="5"
+                            Margin="10,3"
+                            VerticalAlignment="Center" />
+
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="设备备注" />
+                        <TextBox
+                            x:Name="DeviceDescription"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Grid.ColumnSpan="5"
+                            Margin="10,3"
+                            VerticalAlignment="Stretch" />
+
+                    </Grid>
+                </Border>
+            </TabItem>
+            <TabItem Header="产品信息">
+                <Border BorderBrush="LightGray" BorderThickness="1">
+                    <Grid Margin="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <!--
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="产品编号" />
+                        <TextBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="{Binding DisplayProductId}" />
+							-->
+
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="产品代号" />
+                        <TextBox
+                            x:Name="ProductPosId"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="10,3"
+                            VerticalAlignment="Center" />
+
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="4"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="产品名称" />
+                        <TextBox
+                            x:Name="ProductName"
+                            Grid.Row="1"
+                            Grid.Column="5"
+                            Margin="10,3"
+                            VerticalAlignment="Center" />
+
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="系列代号" />
+                        <TextBox
+                            x:Name="ProductModelId"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Margin="10,3"
+                            VerticalAlignment="Center" />
+
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="4"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="系列名称" />
+                        <TextBox
+                            x:Name="ProductModelName"
+                            Grid.Row="2"
+                            Grid.Column="5"
+                            Margin="10,3"
+                            VerticalAlignment="Center" />
+
+                        <TextBlock
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="条码长度" />
+                        <TextBox
+                            x:Name="ProductCodeLength"
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            Margin="10,3"
+                            VerticalAlignment="Center" />
+
+                        <TextBlock
+                            Grid.Row="3"
+                            Grid.Column="4"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="类别代号" />
+                        <TextBox
+                            x:Name="ProductCategoryId"
+                            Grid.Row="3"
+                            Grid.Column="5"
+                            Margin="10,3"
+                            VerticalAlignment="Center" />
+
+                    </Grid>
+                </Border>
+            </TabItem>
+            <TabItem Header="历史记录">
+                <Border BorderBrush="LightGray" BorderThickness="1">
+                    <Grid Margin="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="起始时间" />
+                        <DatePicker
+                            x:Name="HistoryBeginTime"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="10,3"
+                            VerticalAlignment="Center" />
+
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="4"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="截止时间" />
+                        <DatePicker
+                            x:Name="HistoryEndTime"
+                            Grid.Row="0"
+                            Grid.Column="5"
+                            Margin="10,3"
+                            VerticalAlignment="Center" />
+
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="产品代号" />
+                        <TextBox
+                            x:Name="HistoryPosCode"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Margin="10,3"
+                            VerticalAlignment="Center" />
+
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="4"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="产品名称" />
+                        <TextBox
+                            x:Name="HistoryModelName"
+                            Grid.Row="1"
+                            Grid.Column="5"
+                            Margin="10,3"
+                            VerticalAlignment="Center" />
+
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="产品条码" />
+                        <TextBox
+                            x:Name="HistoryProductCode"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            Margin="10,3"
+                            VerticalAlignment="Center" />
+
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="4"
+                            Margin="10,3"
+                            VerticalAlignment="Center"
+                            Text="托盘条码" />
+                        <TextBox
+                            x:Name="HistoryTrayCode"
+                            Grid.Row="2"
+                            Grid.Column="5"
+                            Margin="10,3"
+                            VerticalAlignment="Center" />
+
+                    </Grid>
+                </Border>
+            </TabItem>
+        </TabControl>
+
+        <DataGrid
+            x:Name="QuerySheet"
+            Margin="16"
+            AutoGenerateColumns="True"
+            CanUserReorderColumns="False"
+            CanUserResizeColumns="True"
+            CanUserSortColumns="True"
+            HorizontalScrollBarVisibility="Auto"
+            IsReadOnly="True"
+            SelectionMode="Single"
+            VerticalScrollBarVisibility="Visible" />
+    </DockPanel>
+</UserControl>
