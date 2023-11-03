@@ -391,38 +391,38 @@ namespace DIMS.Hardware
 
         public Socket? sock;
 
-        [DllImport("kernel32.dll")]
-        private static extern int CreateFile(string lpFileName, uint dwDesiredAccess, int dwShareMode, int lpSecurityAttributes, int dwCreationDisposition, int dwFlagsAndAttributes, int hTemplateFile);
+        //[DllImport("kernel32.dll")]
+        //private static extern int CreateFile(string lpFileName, uint dwDesiredAccess, int dwShareMode, int lpSecurityAttributes, int dwCreationDisposition, int dwFlagsAndAttributes, int hTemplateFile);
 
-        [DllImport("kernel32.dll")]
-        private static extern bool GetCommState(int hFile, ref DCB lpDCB);
+        //[DllImport("kernel32.dll")]
+        //private static extern bool GetCommState(int hFile, ref DCB lpDCB);
 
-        [DllImport("kernel32.dll")]
-        private static extern bool SetCommState(int hFile, ref DCB lpDCB);
+        //[DllImport("kernel32.dll")]
+        //private static extern bool SetCommState(int hFile, ref DCB lpDCB);
 
-        [DllImport("kernel32.dll")]
-        private static extern bool GetCommTimeouts(int hFile, ref COMMTIMEOUTS lpCommTimeouts);
+        //[DllImport("kernel32.dll")]
+        //private static extern bool GetCommTimeouts(int hFile, ref COMMTIMEOUTS lpCommTimeouts);
 
-        [DllImport("kernel32.dll")]
-        private static extern bool SetCommTimeouts(int hFile, ref COMMTIMEOUTS lpCommTimeouts);
+        //[DllImport("kernel32.dll")]
+        //private static extern bool SetCommTimeouts(int hFile, ref COMMTIMEOUTS lpCommTimeouts);
 
-        [DllImport("kernel32.dll")]
-        private static extern bool ReadFile(int hFile, byte[] lpBuffer, int nNumberOfBytesToRead, ref int lpNumberOfBytesRead, ref OVERLAPPED lpOverlapped);
+        //[DllImport("kernel32.dll")]
+        //private static extern bool ReadFile(int hFile, byte[] lpBuffer, int nNumberOfBytesToRead, ref int lpNumberOfBytesRead, ref OVERLAPPED lpOverlapped);
 
-        [DllImport("kernel32.dll")]
-        private static extern bool WriteFile(int hFile, byte[] lpBuffer, int nNumberOfBytesToWrite, ref int lpNumberOfBytesWritten, ref OVERLAPPED lpOverlapped);
+        //[DllImport("kernel32.dll")]
+        //private static extern bool WriteFile(int hFile, byte[] lpBuffer, int nNumberOfBytesToWrite, ref int lpNumberOfBytesWritten, ref OVERLAPPED lpOverlapped);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool FlushFileBuffers(int hFile);
+        //[DllImport("kernel32.dll", SetLastError = true)]
+        //private static extern bool FlushFileBuffers(int hFile);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool PurgeComm(int hFile, uint dwFlags);
+        //[DllImport("kernel32.dll", SetLastError = true)]
+        //private static extern bool PurgeComm(int hFile, uint dwFlags);
 
-        [DllImport("kernel32.dll")]
-        private static extern bool CloseHandle(int hObject);
+        //[DllImport("kernel32.dll")]
+        //private static extern bool CloseHandle(int hObject);
 
-        [DllImport("kernel32.dll")]
-        private static extern uint GetLastError();
+        //[DllImport("kernel32.dll")]
+        //private static extern uint GetLastError();
 
         internal void SetDcbFlag(int whichFlag, int setting, DCB dcb)
         {
@@ -445,7 +445,7 @@ namespace DIMS.Hardware
             dcb.flags |= (uint)setting;
         }
 
-        public int SetBaudRate(int ReaderAddr, int usBaudRate)
+        /* public int SetBaudRate(int ReaderAddr, int usBaudRate)
         {
             byte[] array = new byte[6] { 10, 0, 3, 32, 0, 0 };
             array[1] = (byte)ReaderAddr;
@@ -501,9 +501,9 @@ namespace DIMS.Hardware
                 return ERR_SET_PARA_FAIL;
             }
             return SUCCESS_RETURN;
-        }
+        } */
 
-        public int OpenCommPort(string port, int nBaud)
+        /* public int OpenCommPort(string port, int nBaud)
         {
             DCB lpDCB = default(DCB);
             COMMTIMEOUTS lpCommTimeouts = default(COMMTIMEOUTS);
@@ -537,18 +537,18 @@ namespace DIMS.Hardware
             Opened = true;
             PortType = 0;
             return SUCCESS_RETURN;
-        }
+        } */
 
-        public void CloseCommPort()
+        /* public void CloseCommPort()
         {
             SetBaudRate(255, 115200);
             if (hComm != -1)
             {
                 CloseHandle(hComm);
             }
-        }
+        } */
 
-        private int Read(ref byte[] bytData, int NumBytes)
+        /* private int Read(ref byte[] bytData, int NumBytes)
         {
             if (hComm != -1)
             {
@@ -558,9 +558,9 @@ namespace DIMS.Hardware
                 return lpNumberOfBytesRead;
             }
             return -1;
-        }
+        } */
 
-        private int Write(byte[] WriteBytes, int intSize)
+        /* private int Write(byte[] WriteBytes, int intSize)
         {
             if (hComm != -1)
             {
@@ -570,23 +570,23 @@ namespace DIMS.Hardware
                 return lpNumberOfBytesWritten;
             }
             return -1;
-        }
+        } */
 
-        private void ClearReceiveBuf()
+        /* private void ClearReceiveBuf()
         {
             if (hComm != -1)
             {
                 PurgeComm(hComm, 10u);
             }
-        }
+        } */
 
-        private void ClearSendBuf()
+        /* private void ClearSendBuf()
         {
             if (hComm != -1)
             {
                 PurgeComm(hComm, 5u);
             }
-        }
+        } */
 
         private int BaudRateLower(int BaudRate)
         {
@@ -692,7 +692,7 @@ namespace DIMS.Hardware
             send_buf[intSize - 1] = b;
             if (PortType == 0)
             {
-                ClearSendBuf();
+                /* ClearSendBuf();
                 ClearReceiveBuf();
                 if (Write(send_buf, intSize) != intSize)
                 {
@@ -710,7 +710,7 @@ namespace DIMS.Hardware
                         return ERR_RDATA_LEN;
                     }
                     return SUCCESS_RETURN;
-                }
+                } */
                 return ERR_NOTAG_RETURN;
             }
             if (TcpSend(send_buf, intSize) != intSize)
@@ -966,7 +966,7 @@ namespace DIMS.Hardware
             }
             return 2100 + rcv_buf[0];
         }
-
+ 
         public int ClearIdBuf(int ReaderAddr)
         {
             byte[] array = new byte[5] { 10, 0, 2, 68, 177 };
@@ -1684,7 +1684,7 @@ namespace DIMS.Hardware
             return 2100 + rcv_buf[0];
         }
 
-        public int Gen2SelectConfig(int ReaderAddr, int Action, int Membank, int wordAddr, int wordCnt, string[] words)
+        /* public int Gen2SelectConfig(int ReaderAddr, int Action, int Membank, int wordAddr, int wordCnt, string[] words)
         {
             byte[] array = new byte[26]
             {
@@ -1718,7 +1718,7 @@ namespace DIMS.Hardware
                 return SUCCESS_RETURN;
             }
             return 2100 + rcv_buf[0];
-        }
+        } */
 
         public int Gen2KillTag(int ReaderAddr, uint AccPassWord)
         {
@@ -1746,7 +1746,7 @@ namespace DIMS.Hardware
             return num;
         }
 
-        public void Gen2MultiTagInventory(int ReaderAddr)
+        /* public void Gen2MultiTagInventory(int ReaderAddr)
         {
             byte[] array = new byte[6] { 10, 0, 3, 128, 1, 115 };
             array[1] = (byte)ReaderAddr;
@@ -1762,9 +1762,9 @@ namespace DIMS.Hardware
                 TcpSend(array2, 6);
             }
             Thread.Sleep(6);
-        }
+        } */
 
-        public void Gen2MultiTagInventoryStop(int ReaderAddr)
+        /* public void Gen2MultiTagInventoryStop(int ReaderAddr)
         {
             byte[] array = new byte[6] { 10, 0, 2, 129, 116, 0 };
             array[1] = (byte)ReaderAddr;
@@ -1780,7 +1780,7 @@ namespace DIMS.Hardware
                 TcpSend(array2, 5);
             }
             Thread.Sleep(6);
-        }
+        } */
 
         public int Gen2MultiTagRead(int ReaderAddr, byte MembankMask, byte ResWordPtr, byte ResWordCnt, byte EpcWordPtr, byte EpcWordCnt, byte TidWordPtr, byte TidWordCnt, byte UserWordPtr, byte UserWordCnt, ref int ReadCnt)
         {
