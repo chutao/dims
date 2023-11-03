@@ -197,6 +197,10 @@ namespace DIMS.ViewModels
         {
             if (RfidScanner != null)
             {
+                await Dispatcher.UIThread.InvokeAsync(() => {
+                    CurrentProductCode = "---";
+                });
+
                 if (!RfidScanner.IsConnected)
                     RfidScanner.Connect();
 

@@ -194,6 +194,9 @@ namespace DIMS.Hardware
                     int status = _api.EpcMultiTagIdentify(255, ref tagData, ref tagCount, ref tag_flag);
                     if (status == MR6100Api.SUCCESS_RETURN)
                     {
+                        if(tagCount == 0)
+                            continue;
+
                         for (int i = 0; i < tagCount; i++)
                         {
                             int j = 0;
@@ -215,8 +218,10 @@ namespace DIMS.Hardware
                         break;
                     }
 
-                    if (stopwatch.ElapsedMilliseconds >= timeout)
+                    if (stopwatch.ElapsedMilliseconds >= timeout){
+                        //System.Diagnostics.Debug.WriteLine("RFID超时返回");
                         break;
+                    }
                 }
 
                 return idList;
