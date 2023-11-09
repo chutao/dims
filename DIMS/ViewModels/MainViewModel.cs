@@ -226,7 +226,9 @@ public class MainViewModel : ViewModelBase, IDataProvider, Helpers.ILogger, IEna
         if (_Logs.Count > 1000)
             _Logs.RemoveAt(0);
 
-        SelectedLoggerItem = _Logs.Count > 0 ? _Logs.Items.Last() : null;
+        _ = Dispatcher.UIThread.InvokeAsync(() => {
+            SelectedLoggerItem = _Logs.Count > 0 ? _Logs.Items.Last() : null;
+        });
     }
 
 

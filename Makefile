@@ -7,7 +7,7 @@ clean:
 	dotnet clean
 
 publish:
-	dotnet publish DIMS.Desktop -r linux-x64 -o publish -c Release --sc
+	dotnet publish DIMS.Desktop -r linux-x64 -o publish -c Release --no-self-contained
 
 run:
 	dotnet run --project DIMS.Desktop

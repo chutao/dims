@@ -28,7 +28,7 @@ namespace DIMS.Core
                 var client = new TcpClient(_Address, _Port) {  ReceiveTimeout = 3000, SendTimeout = 3000 };
                 var stream = client.GetStream();
                 var rpc = JsonRpc.Attach(stream);
-                var response = await rpc.InvokeAsync<Response>("Query", tray);
+                var response = await rpc.InvokeWithCancellationAsync<Response>("Query", new object[]{ tray }, cancellation);
                 rpc.Dispose();
                 stream.Dispose();
                 client.Close();
@@ -49,7 +49,7 @@ namespace DIMS.Core
                 var client = new TcpClient(_Address, _Port) { ReceiveTimeout = 3000, SendTimeout = 3000 };
                 var stream = client.GetStream();
                 var rpc = JsonRpc.Attach(stream);
-                var response = await rpc.InvokeAsync<bool>("Update", new object[] { tray, state });
+                var response = await rpc.InvokeWithCancellationAsync<bool>("Update", new object[] { tray, state }, cancellation);
                 rpc.Dispose();
                 stream.Dispose();
                 client.Close();
