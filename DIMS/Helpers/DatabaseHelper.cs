@@ -38,6 +38,16 @@ namespace DIMS.Helpers
             }
         }
 
+        private static string? FormatDateTime(DateTime? dt)
+        {
+            return dt?.ToString("yyyy-dd-MM HH:mm:ss");
+        }
+
+        private static DateTime ToDateTime(string dt)
+        {
+            return Convert.ToDateTime(dt);
+        }
+
         private bool ExecuteNonQuery(Func<MySqlConnection, bool> action)
         {
             bool result = false;
@@ -441,11 +451,11 @@ namespace DIMS.Helpers
                 {
                     if (needAndFlag)
                     {
-                        sql += $" and timestamp>={begin} and timestamp<={end}";
+                        sql += $" and timestamp>={FormatDateTime(begin)} and timestamp<={FormatDateTime(end)}";
                     }
                     else
                     { 
-                        sql += $" timestamp>={begin} and timestamp<={end}";
+                        sql += $" timestamp>={FormatDateTime(begin)} and timestamp<={FormatDateTime(end)}";
                         needAndFlag = true;
                     }
                 }
@@ -486,7 +496,7 @@ namespace DIMS.Helpers
 
                 cmd.Parameters["@mcode"].Value = model.ProductCode != null ? model.ProductCode : DBNull.Value;
                 cmd.Parameters["@tcode"].Value = model.TrayCode != null ? model.TrayCode : DBNull.Value;
-                cmd.Parameters["@timestamp"].Value = model.Timestamp != null ? model.Timestamp : DBNull.Value;
+                cmd.Parameters["@timestamp"].Value = model.Timestamp != null ? FormatDateTime(model.Timestamp) : DBNull.Value;
                 cmd.Parameters["@state"].Value = model.State;
 
                 return cmd.ExecuteNonQuery() > 0;
@@ -538,7 +548,7 @@ namespace DIMS.Helpers
                 cmd.Parameters["@state"].Value = model.State;
                 cmd.Parameters["@mcode"].Value = model.ProductCode != null ? model.ProductCode : DBNull.Value;
                 cmd.Parameters["@tcode"].Value = model.TrayCode != null ? model.TrayCode : DBNull.Value;
-                cmd.Parameters["@timestamp"].Value = model.Timestamp != null ? model.Timestamp : DBNull.Value;
+                cmd.Parameters["@timestamp"].Value = model.Timestamp != null ? FormatDateTime(model.Timestamp) : DBNull.Value;
 
                 return cmd.ExecuteNonQuery() > 0;
             });
