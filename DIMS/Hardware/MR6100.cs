@@ -264,7 +264,7 @@ namespace DIMS.Hardware
             public ushort wReserved1;
         }
 
-        private struct COMMTIMEOUTS
+        /* private struct COMMTIMEOUTS
         {
             public int ReadIntervalTimeout;
 
@@ -275,9 +275,9 @@ namespace DIMS.Hardware
             public int WriteTotalTimeoutMultiplier;
 
             public int WriteTotalTimeoutConstant;
-        }
+        } */
 
-        private struct OVERLAPPED
+        /* private struct OVERLAPPED
         {
             public int Internal;
 
@@ -288,7 +288,7 @@ namespace DIMS.Hardware
             public int OffsetHigh;
 
             public int hEvent;
-        }
+        } */
 
         private const string DLLPATH = "kernel32.dll";
 
@@ -392,7 +392,7 @@ namespace DIMS.Hardware
 
         public bool Opened;
 
-        private int hComm = -1;
+        //private int hComm = -1;
 
         public Socket? sock;
 

@@ -38,7 +38,7 @@ namespace DIMS.Hardware
 
         public bool IsConnected { get; private set; }
 
-        public event EventHandler? ProductReadyEvent;
+        public event EventHandler? ProductReadyChanged;
         private bool _IsProductReady;
         public bool IsProductReady
         {
@@ -48,8 +48,7 @@ namespace DIMS.Hardware
                 if (_IsProductReady != value)
                 {
                     _IsProductReady = value;
-                    if(_IsProductReady)
-                        ProductReadyEvent?.Invoke(this, EventArgs.Empty);
+                    ProductReadyChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
@@ -57,6 +56,7 @@ namespace DIMS.Hardware
         public string? Address
         {
             get => _address;
+            
             set => _address = value ?? "127.0.0.1";
         }
 

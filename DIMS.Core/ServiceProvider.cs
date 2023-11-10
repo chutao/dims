@@ -1,6 +1,7 @@
 ﻿using DIMS.Hardware;
 using System;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DIMS.Core
@@ -60,14 +61,14 @@ namespace DIMS.Core
             set => _ScannerPort = value;
         }
 
-        public async Task<string> GetTrayCodeAsync()
+        public async Task<string> GetTrayCodeAsync(CancellationToken cancellation = default)
         {
             try
             {
                 if (_Scanner == null)
                     _Scanner = new Infoscanner(_ScannerAddress, _ScannerPort);
 
-                return await _Scanner.GetBarcodeAsync();
+                return await _Scanner.GetBarcodeAsync(cancellation);
             }
             catch (Exception)
             { 
@@ -75,14 +76,14 @@ namespace DIMS.Core
             }
         }
 
-        public async Task<Tuple<int, bool>> GetProductModelAsync(string traycode)
+        public async Task<Tuple<int, bool>> GetProductModelAsync(string traycode, CancellationToken cancellation = default)
         {
             try
             {
                 if (_Client == null)
                     _Client = new JsonRpcClient(_ServiceAddress, _ServicePort);
 
-                var response = await _Client.QueryAsync(traycode);
+                var response = await _Client.QueryAsync(traycode, cancellation);
                 if (response == null || !response.IsSuccess)
                     return new Tuple<int, bool>(-1, false);
 

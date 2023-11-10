@@ -29,7 +29,6 @@ namespace DIMS.ViewModels
                     IsTrayScannerConnected = TrayScanner!.IsConnected;
                     IsProductScannerConnected = RfidScanner!.IsConnected;
                     IsPlcConnected = Plc!.IsConnected;
-                    IsTrayReady = Plc!.IsProductReady;
                 })
                 .DisposeWith(d);
             });
@@ -170,7 +169,9 @@ namespace DIMS.ViewModels
         {
             if (TrayScanner != null)
             {
-                string? code = await TrayScanner.GetBarcodeAsync();
+                CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
+                cancellationTokenSource.CancelAfter(3000);
+                string? code = await TrayScanner.GetBarcodeAsync(cancellationTokenSource.Token);
                 await Dispatcher.UIThread.InvokeAsync(() => { CurrentTrayCode = code; });
             }
         }
