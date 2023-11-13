@@ -443,7 +443,7 @@ public class MainViewModel : ViewModelBase, IDataProvider, Helpers.ILogger, IEna
                                 TrayPopOutQueue();
                             if (!TrayPushIntoQueue(_cachedProductCode, _cachedTrayCode))
                             { 
-                                // Log error
+                                this.Log().Warn($"Failed to bind rfid {_cachedProductCode} with tray {_cachedTrayCode}");
                             }
 
                             _step = 40;

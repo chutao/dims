@@ -32,7 +32,7 @@ create table history(
 	mcode VARCHAR(50) NOT NULL,
 	tcode VARCHAR(50) NOT NULL,
 	timestamp DATETIME NOT NULL,
-	state UINT NULL,
+	state INT NULL,
 	PRIMARY KEY(id)
 );
 ```

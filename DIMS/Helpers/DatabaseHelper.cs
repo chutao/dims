@@ -40,7 +40,7 @@ namespace DIMS.Helpers
 
         private static string? FormatDateTime(DateTime? dt)
         {
-            return dt?.ToString("yyyy-dd-MM HH:mm:ss");
+            return dt?.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
         private static DateTime ToDateTime(string dt)
@@ -367,7 +367,7 @@ namespace DIMS.Helpers
         {
             return ExecuteNonQuery((conn) =>
             {
-                string sql = "update products set pname=@pname, mcode=@mcode, mname=@mname, category=@category, codelen=@codelen where pcode=@pcode";
+                string sql = "update products set pname='@pname', mcode='@mcode', mname='@mname', category=@category, codelen=@codelen where pcode='@pcode'";
                 MySqlCommand cmd = new MySqlCommand( sql, conn);
                 cmd.Parameters.Add("@category", MySqlDbType.Int32);
                 cmd.Parameters.Add("@codelen", MySqlDbType.Int32);
@@ -396,7 +396,7 @@ namespace DIMS.Helpers
 
             return ExecuteNonQuery((conn) =>
             {
-                string sql = $"create table history(id INT NOT NULL AUTO_INCREMENT, mcode VARCHAR(50) NOT NULL, tcode VARCHAR(50) NOT NULL, timetamp DATETIME NOT NULL, state BIGINT NOT NULL, PRIMARY KEY(id))";
+                string sql = $"create table history(id INT NOT NULL AUTO_INCREMENT, mcode VARCHAR(50) NOT NULL, tcode VARCHAR(50) NOT NULL, timetamp DATETIME NOT NULL, state INT NOT NULL, PRIMARY KEY(id))";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 return cmd.ExecuteNonQuery() > 0;
             });
@@ -451,11 +451,11 @@ namespace DIMS.Helpers
                 {
                     if (needAndFlag)
                     {
-                        sql += $" and timestamp>={FormatDateTime(begin)} and timestamp<={FormatDateTime(end)}";
+                        sql += $" and timestamp>='{FormatDateTime(begin)}' and timestamp<='{FormatDateTime(end)}'";
                     }
                     else
                     { 
-                        sql += $" timestamp>={FormatDateTime(begin)} and timestamp<={FormatDateTime(end)}";
+                        sql += $" timestamp>='{FormatDateTime(begin)}' and timestamp<='{FormatDateTime(end)}'";
                         needAndFlag = true;
                     }
                 }
@@ -486,7 +486,7 @@ namespace DIMS.Helpers
         {
             return ExecuteNonQuery((conn) =>
             {
-                string sql = "insert into history(id, mcode, tcode, timestamp, state) values(@mcode, @tcode, @timestamp, @state)";
+                string sql = "insert into history(mcode, tcode, timestamp, state) values('@mcode', '@tcode', '@timestamp', @state)";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
 
                 cmd.Parameters.Add("@mcode", MySqlDbType.VarChar, 50);
@@ -536,7 +536,7 @@ namespace DIMS.Helpers
         {
             return ExecuteNonQuery((conn) =>
             {
-                string sql = "update history set mcode=@mcode, tcode=@tcode, state=@state, timestamp=@timestamp where id=@id";
+                string sql = "update history set mcode=@mcode, tcode=@tcode, timestamp=@timestamp, state=@state where id=@id";
                 MySqlCommand cmd = new MySqlCommand( sql, conn);
                 cmd.Parameters.Add("@id", MySqlDbType.Int64);
                 cmd.Parameters.Add("@mcode", MySqlDbType.VarChar, 50);

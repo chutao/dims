@@ -12,6 +12,7 @@ using MsBox.Avalonia;
 using Projektanker.Icons.Avalonia;
 using Projektanker.Icons.Avalonia.FontAwesome;
 using ReactiveUI;
+using ZstdSharp.Unsafe;
 
 namespace DIMS.Desktop;
 
@@ -93,12 +94,14 @@ class Program
             messageBoxButtons = MsBox.Avalonia.Enums.ButtonEnum.YesNo;
         }
 
-        var main = (App.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) ? desktop.MainWindow : null;
-        var messageBoxWindow = MsBox.Avalonia.MessageBoxManager.GetMessageBoxStandard(messageBoxTitle, messageBoxMessage, messageBoxButtons);
-        if (await messageBoxWindow.ShowAsPopupAsync(main) == MsBox.Avalonia.Enums.ButtonResult.Yes)
-        {
-            Environment.Exit(-1);
-        }
+        await Dispatcher.UIThread.InvokeAsync(async () => {
+            var main = (App.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) ? desktop.MainWindow : null;
+            var messageBoxWindow = MsBox.Avalonia.MessageBoxManager.GetMessageBoxStandard(messageBoxTitle, messageBoxMessage, messageBoxButtons);
+            if (await messageBoxWindow.ShowAsPopupAsync(main) == MsBox.Avalonia.Enums.ButtonResult.Yes)
+            {
+                Environment.Exit(-1);
+            }
+        });
     }
 
     private static void SilenceConsole()
