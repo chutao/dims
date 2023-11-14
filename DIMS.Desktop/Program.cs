@@ -92,16 +92,16 @@ class Program
         {
             messageBoxMessage += "\n\nNormally the app would die now. Should we let it die?";
             messageBoxButtons = MsBox.Avalonia.Enums.ButtonEnum.YesNo;
-        }
 
-        await Dispatcher.UIThread.InvokeAsync(async () => {
-            var main = (App.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) ? desktop.MainWindow : null;
-            var messageBoxWindow = MsBox.Avalonia.MessageBoxManager.GetMessageBoxStandard(messageBoxTitle, messageBoxMessage, messageBoxButtons);
-            if (await messageBoxWindow.ShowAsPopupAsync(main) == MsBox.Avalonia.Enums.ButtonResult.Yes)
-            {
-                Environment.Exit(-1);
-            }
-        });
+            await Dispatcher.UIThread.InvokeAsync(async () => {
+                var main = (App.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) ? desktop.MainWindow : null;
+                var messageBoxWindow = MsBox.Avalonia.MessageBoxManager.GetMessageBoxStandard(messageBoxTitle, messageBoxMessage, messageBoxButtons);
+                if (await messageBoxWindow.ShowAsPopupAsync(main) == MsBox.Avalonia.Enums.ButtonResult.Yes)
+                {
+                    Environment.Exit(-1);
+                }
+            });
+        }
     }
 
     private static void SilenceConsole()

@@ -65,9 +65,7 @@ public class MainViewModel : ViewModelBase, IDataProvider, Helpers.ILogger, IEna
         _Plc.Address = Settings.Instance.Application.LinePlcAddress;
         _Plc.Port = Settings.Instance.Application.LinePlcPort;
         _Plc.ProductReadyChanged += (s, e) => { 
-            _ = Dispatcher.UIThread.InvokeAsync(() => {
-                MonitorViewModel.IsTrayReady = _Plc.IsProductReady;
-            });
+            MonitorViewModel.IsTrayReady = _Plc.IsProductReady;
         };
         _Plc.Connect();
 

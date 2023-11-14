@@ -37,7 +37,7 @@ namespace DIMS.Views
                 this.OneWayBind(ViewModel, vm => vm.IsPlcConnected, v => v.PlcIcon.Value, x => LinkStateToIconConverter.Instance.Convert(x, typeof(string), null, CultureInfo.CurrentCulture)).DisposeWith(d);
                 this.OneWayBind(ViewModel, vm => vm.IsPlcConnected, v => v.PlcIcon.Foreground, x => BooleanToBrushConverter.Instance.Convert(x, typeof(Brush), null, CultureInfo.CurrentCulture)).DisposeWith(d);
 
-                this.OneWayBind(ViewModel, vm => vm.IsTrayReady, v => v.TrayReadyIcon.Background, x => BooleanToBrushConverter.Instance.Convert(x, typeof(Brush), null, CultureInfo.CurrentCulture)).DisposeWith(d);
+                this.OneWayBind(ViewModel, vm => vm.TrayIndicatorBackground, v => v.TrayReadyIcon.Background).DisposeWith(d);
                 this.BindCommand(ViewModel, vm => vm.TestReadySignalCommand, v => v.TestTrayReadyButton).DisposeWith(d);
 
                 this.OneWayBind(ViewModel, vm => vm.AutoStep, v => v.AutoStep.Text).DisposeWith(d);

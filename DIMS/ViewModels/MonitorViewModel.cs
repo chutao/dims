@@ -1,10 +1,12 @@
-﻿using Avalonia.Threading;
+﻿using Avalonia.Media;
+using Avalonia.Threading;
 using DIMS.Hardware;
 using DIMS.Helpers;
 using ReactiveUI;
 using Splat;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -19,6 +21,10 @@ namespace DIMS.ViewModels
     {
         public MonitorViewModel()
         {
+            _TrayIndicatorBackground = this.WhenAnyValue(vm => vm.IsTrayReady)
+                .Select(x => (IImmutableBrush?)BooleanToBrushConverter.Instance.Convert(x, typeof(IImmutableBrush), null, CultureInfo.CurrentCulture))
+                .ToProperty(this, vm => vm.TrayIndicatorBackground, false, RxApp.MainThreadScheduler);
+
             this.WhenActivated(d =>
             {
                 Observable
@@ -80,6 +86,9 @@ namespace DIMS.ViewModels
             get => _IsTrayReady;
             set => this.RaiseAndSetIfChanged(ref _IsTrayReady, value);
         }
+
+        private ObservableAsPropertyHelper<IImmutableBrush?>? _TrayIndicatorBackground = null;
+        public IImmutableBrush? TrayIndicatorBackground => _TrayIndicatorBackground != null ? _TrayIndicatorBackground.Value : Brushes.Gray; 
 
         private uint _AutoStep;
         public uint AutoStep
