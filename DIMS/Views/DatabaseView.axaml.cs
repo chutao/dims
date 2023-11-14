@@ -59,7 +59,7 @@ namespace DIMS.Views
 
                 d(ViewModel!.ShowDialog.RegisterHandler(async (interaction) =>
                 {
-                    bool result = await Dispatcher.UIThread.InvokeAsync(async () => {
+                    bool result = await Dispatcher.UIThread.Invoke(async () => {
                         var param = new MessageBoxStandardParams
                         {
                             FontFamily = "Microsoft YaHei UI",
