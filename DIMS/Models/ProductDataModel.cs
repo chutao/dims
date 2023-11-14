@@ -46,6 +46,12 @@ namespace DIMS.Models
         public int CodeLength { get; set; }
 
         /// <summary>
+        /// 机型补正
+        /// </summary>
+        [Display(Name = "机型补正")]
+        public bool Correction { get; set; }
+
+        /// <summary>
         /// 备注
         /// </summary>
         [Display(Name = "备注")]

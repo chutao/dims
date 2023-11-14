@@ -76,8 +76,18 @@
                 Margin="5"
                 i:Attached.Icon="fa-solid fa-file-import"
                 FontSize="32"
-                IsVisible="False"
+                IsVisible="True"
                 ToolTip.Tip="导入产品数据到数据库" />
+
+            <Button
+                x:Name="ExportButton"
+                Width="48"
+                Height="48"
+                Margin="5"
+                i:Attached.Icon="fa-solid fa-file-export"
+                FontSize="32"
+                IsVisible="True"
+                ToolTip.Tip="导出产品数据到数据库" />
         </WrapPanel>
 
         <TabControl

@@ -18,21 +18,21 @@ create table devices(
   PRIMARY KEY(id));
 
 create table products(
-  id INT NOT NULL AUTO_INCREMENT, 
   pcode VARCHAR(50) NOT NULL, 
   pname VARCHAR(50), 
   mcode VARCHAR(50) NOT NULL, 
   mname VARCHAR(50), 
   category INT NOT NULL, 
-  codelen INT NOT NULL, 
-  PRIMARY KEY(id));
+  codelen INT NOT NULL,
+  correction TINYINT(1) NOT NULL, 
+  PRIMARY KEY(pcode)));
 
 create table history(
 	id INT NOT NULL AUTO_INCREMENT,
 	mcode VARCHAR(50) NOT NULL,
 	tcode VARCHAR(50) NOT NULL,
 	timestamp DATETIME NOT NULL,
-	state INT NULL,
+	state BIGINT NULL,
 	PRIMARY KEY(id)
 );
 ```

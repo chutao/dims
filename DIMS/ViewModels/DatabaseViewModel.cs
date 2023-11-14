@@ -90,6 +90,8 @@ namespace DIMS.ViewModels
 
         public Interaction<string?, string?> FilePicker { get; } = new Interaction<string?, string?>();
 
+        public Interaction<string?, string?> FileSavePicker { get; } = new Interaction<string?, string?>();
+
         private int _SelectedTabIndex;
         public int SelectedTabIndex
         {
@@ -606,7 +608,7 @@ namespace DIMS.ViewModels
                         sr.Close();
                     }
 
-                    if (lines != null)
+                    if (lines != null && lines.Length > 1)
                     {
                         for (int i = 1; i < lines.Length; i++)
                         {
@@ -616,18 +618,31 @@ namespace DIMS.ViewModels
 
                             line = line.Trim();
                             string[] columns = line.Split(',');
-                            if(columns == null || columns.Length < 3)
+                            if(columns == null || columns.Length < 7)
                                 continue;
 
-                            string model = columns[0].Trim();
-                            string pcode = columns[1].Trim();
+                            string pcode = columns[0].Trim();
+                            string pname = columns[1].Trim();
+                            string mcode = columns[2].Trim();
+                            string mname = columns[3].Trim();
+                            int category = int.Parse(columns[4].Trim());
+                            int codelen = int.Parse(columns[5].Trim());
+                            bool correction = bool.Parse(columns[6].Trim());
 
-                            MysqlDbHelper.Default.ProductInsert(new ProductDataModel()
+                            ProductDataModel model = new ProductDataModel()
                             {
-                                CodeLength = Helper.PRODUCT_CODE_LENGTH,
                                 POSCode = pcode,
-                                Model = model,
-                            });
+                                ProductName = pname,
+                                Model = mcode,
+                                ModelName = mname,
+                                Category = category,
+                                CodeLength = codelen,
+                                Correction = correction
+                            };
+
+                            bool success = MysqlDbHelper.Default.ProductInsert(model);
+                            if(!success)
+                                MysqlDbHelper.Default.ProductUpdate(model);
                         }
                     }
                 }
@@ -649,6 +664,51 @@ namespace DIMS.ViewModels
                 }
 
                 return _ImportProductsCommand;
+            }
+        }
+        #endregion
+
+        #region ExportProducts Command 
+        private ReactiveCommand<Unit, Unit>? _ExportProductsCommand = null;
+
+        private async Task OnExportProductsAsync()
+        {
+            string? file = await FileSavePicker.Handle("请选择要导出的CSV数据文件路径:");
+            try
+            {
+                var table = MysqlDbHelper.Default.ProductQuery(null, null);
+                if(table != null)
+                {
+                    using(StreamWriter sw = new StreamWriter(file, false, Encoding.UTF8))
+                    {
+                        await sw.WriteLineAsync("PCODE,PNAME,MCODE,MNAME,CATEGORY,CODELEN,CORRECT");
+
+                        foreach(ProductDataModel model in table)
+                        {
+                            await sw.WriteLineAsync($"{model.POSCode},{model.ProductName},{model.Model},{model.ModelName},{model.Category},{model.CodeLength},{model.Correction}");
+                        }
+
+                        sw.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.Log().Debug(ex, "Failed to export data from database");
+            }
+        }
+
+        public ReactiveCommand<Unit, Unit> ExportProductsCommand
+        {
+            get
+            {
+                if (_ExportProductsCommand == null)
+                {
+                    // var canExec = 
+                    _ExportProductsCommand = ReactiveCommand.CreateFromTask(() => OnExportProductsAsync());
+                }
+
+                return _ExportProductsCommand;
             }
         }
         #endregion

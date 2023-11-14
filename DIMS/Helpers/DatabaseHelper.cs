@@ -6,6 +6,7 @@ using MySql.Data;
 using DIMS.Models;
 using Splat;
 using MySql.Data.MySqlClient;
+using MySql.Data.Types;
 using NLog.LayoutRenderers;
 using System.Xml.Linq;
 using MySqlX.XDevAPI.Common;
@@ -13,7 +14,7 @@ using System.Reflection;
 
 namespace DIMS.Helpers
 {
-    internal class MysqlDbHelper : IEnableLogger
+    public class MysqlDbHelper : IEnableLogger
     {
         private MysqlDbHelper()
         {
@@ -36,6 +37,11 @@ namespace DIMS.Helpers
 
                 return _ConnectionString;
             }
+        }
+
+        public void SetConnectionString(string connectionString)
+        {
+            _ConnectionString = connectionString;
         }
 
         private static string? FormatDateTime(DateTime? dt)
@@ -249,7 +255,7 @@ namespace DIMS.Helpers
 
             return ExecuteNonQuery((conn) =>
             {
-                string sql = $"create table products(pcode VARCHAR(50) NOT NULL, pname VARCHAR(50), mcode VARCHAR(50) NOT NULL, mname VARCHAR(50), category INT NOT NULL, codelen INT NOT NULL, PRIMARY KEY(pcode))";
+                string sql = $"create table products(pcode VARCHAR(50) NOT NULL, pname VARCHAR(50), mcode VARCHAR(50) NOT NULL, mname VARCHAR(50), category INT NOT NULL, codelen INT NOT NULL, correction TINYINT(1) NOT NULL, PRIMARY KEY(pcode))";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 return cmd.ExecuteNonQuery() > 0;
             });
@@ -320,6 +326,7 @@ namespace DIMS.Helpers
                         ProductName = reader["pname"].ToString(),
                         Category = reader.GetInt32("category"),
                         CodeLength = reader.GetInt32("codelen"),
+                        Correction = reader.GetBoolean("correction"),
                     });
                 }
 
@@ -333,7 +340,7 @@ namespace DIMS.Helpers
         {
             return ExecuteNonQuery((conn) =>
             {
-                string sql = "insert into products(pname, pcode, mname, mcode, category, codelen) values(@pname, @pcode, @mname, @mcode, @category, @codelen)";
+                string sql = "insert into products(pname, pcode, mname, mcode, category, codelen, correction) values(@pname, @pcode, @mname, @mcode, @category, @codelen, @correction)";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.Add("@pcode", MySqlDbType.VarString, 50);
                 cmd.Parameters.Add("@pname", MySqlDbType.VarString, 50);
@@ -341,6 +348,7 @@ namespace DIMS.Helpers
                 cmd.Parameters.Add("@mname", MySqlDbType.VarString, 50);
                 cmd.Parameters.Add("@category", MySqlDbType.Int32);
                 cmd.Parameters.Add("@codelen", MySqlDbType.Int32);
+                cmd.Parameters.Add("@correction", MySqlDbType.Bit);
 
                 cmd.Parameters["@pcode"].Value = model.POSCode != null ? model.POSCode : DBNull.Value;
                 cmd.Parameters["@pname"].Value = model.ProductName != null ? model.ProductName : DBNull.Value;
@@ -348,6 +356,7 @@ namespace DIMS.Helpers
                 cmd.Parameters["@mname"].Value = model.ModelName != null ? model.ModelName : DBNull.Value;
                 cmd.Parameters["@category"].Value = model.Category;
                 cmd.Parameters["@codelen"].Value = model.CodeLength;
+                cmd.Parameters["@correction"].Value = model.Correction;
 
                 return cmd.ExecuteNonQuery() > 0;
             });
@@ -367,10 +376,11 @@ namespace DIMS.Helpers
         {
             return ExecuteNonQuery((conn) =>
             {
-                string sql = "update products set pname='@pname', mcode='@mcode', mname='@mname', category=@category, codelen=@codelen where pcode='@pcode'";
-                MySqlCommand cmd = new MySqlCommand( sql, conn);
+                string sql = "update products set pname=@pname, mcode=@mcode, mname=@mname, category=@category, codelen=@codelen, correction=@correction where pcode=@pcode";
+                MySqlCommand cmd = new MySqlCommand(sql, conn);
                 cmd.Parameters.Add("@category", MySqlDbType.Int32);
                 cmd.Parameters.Add("@codelen", MySqlDbType.Int32);
+                cmd.Parameters.Add("@correction", MySqlDbType.Bit);
                 cmd.Parameters.Add("@pcode", MySqlDbType.VarChar, 50);
                 cmd.Parameters.Add("@pname", MySqlDbType.VarChar, 50);
                 cmd.Parameters.Add("@mcode", MySqlDbType.VarChar, 50);
@@ -378,12 +388,15 @@ namespace DIMS.Helpers
 
                 cmd.Parameters["@category"].Value = model.Category;
                 cmd.Parameters["@codelen"].Value = model.CodeLength;
+                cmd.Parameters["@correction"].Value = model.Correction;
                 cmd.Parameters["@pcode"].Value = model.POSCode != null ? model.POSCode : DBNull.Value;
                 cmd.Parameters["@pname"].Value = model.ProductName != null ? model.ProductName : DBNull.Value;
                 cmd.Parameters["@mcode"].Value = model.Model != null ? model.Model : DBNull.Value;
                 cmd.Parameters["@mname"].Value = model.ModelName != null ? model.ModelName : DBNull.Value;
 
-                return cmd.ExecuteNonQuery() > 0;
+                cmd.Prepare();
+                int result = cmd.ExecuteNonQuery();
+                return result >0;
             });
         }
         #endregion
@@ -396,7 +409,7 @@ namespace DIMS.Helpers
 
             return ExecuteNonQuery((conn) =>
             {
-                string sql = $"create table history(id INT NOT NULL AUTO_INCREMENT, mcode VARCHAR(50) NOT NULL, tcode VARCHAR(50) NOT NULL, timetamp DATETIME NOT NULL, state INT NOT NULL, PRIMARY KEY(id))";
+                string sql = $"create table history(id INT NOT NULL AUTO_INCREMENT, mcode VARCHAR(50) NOT NULL, tcode VARCHAR(50) NOT NULL, timetamp DATETIME NOT NULL, state BIGINT NOT NULL, PRIMARY KEY(id))";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
                 return cmd.ExecuteNonQuery() > 0;
             });
@@ -486,7 +499,7 @@ namespace DIMS.Helpers
         {
             return ExecuteNonQuery((conn) =>
             {
-                string sql = "insert into history(mcode, tcode, timestamp, state) values('@mcode', '@tcode', '@timestamp', @state)";
+                string sql = "insert into history(mcode, tcode, timestamp, state) values(@mcode, @tcode, @timestamp, @state)";
                 MySqlCommand cmd = new MySqlCommand(sql, conn);
 
                 cmd.Parameters.Add("@mcode", MySqlDbType.VarChar, 50);
@@ -496,7 +509,7 @@ namespace DIMS.Helpers
 
                 cmd.Parameters["@mcode"].Value = model.ProductCode != null ? model.ProductCode : DBNull.Value;
                 cmd.Parameters["@tcode"].Value = model.TrayCode != null ? model.TrayCode : DBNull.Value;
-                cmd.Parameters["@timestamp"].Value = model.Timestamp != null ? FormatDateTime(model.Timestamp) : DBNull.Value;
+                cmd.Parameters["@timestamp"].Value = model.Timestamp.HasValue ? new MySqlDateTime(model.Timestamp.Value) : DBNull.Value;
                 cmd.Parameters["@state"].Value = model.State;
 
                 return cmd.ExecuteNonQuery() > 0;
@@ -548,7 +561,7 @@ namespace DIMS.Helpers
                 cmd.Parameters["@state"].Value = model.State;
                 cmd.Parameters["@mcode"].Value = model.ProductCode != null ? model.ProductCode : DBNull.Value;
                 cmd.Parameters["@tcode"].Value = model.TrayCode != null ? model.TrayCode : DBNull.Value;
-                cmd.Parameters["@timestamp"].Value = model.Timestamp != null ? FormatDateTime(model.Timestamp) : DBNull.Value;
+                cmd.Parameters["@timestamp"].Value = model.Timestamp.HasValue ? new MySqlDateTime(model.Timestamp.Value) : DBNull.Value;
 
                 return cmd.ExecuteNonQuery() > 0;
             });

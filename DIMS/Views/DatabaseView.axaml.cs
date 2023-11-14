@@ -9,6 +9,7 @@ using Avalonia.Platform.Storage;
 using System.Reactive.Disposables;
 using System;
 using System.ComponentModel;
+using Avalonia.Threading;
 
 namespace DIMS.Views
 {
@@ -27,6 +28,7 @@ namespace DIMS.Views
                 d(this.BindCommand(ViewModel, vm => vm.QueryCommand, v => v.QueryButton));
                 d(this.BindCommand(ViewModel, vm => vm.ResetQueryCommand, v => v.ClearButton));
                 d(this.BindCommand(ViewModel, vm => vm.ImportProductsCommand, v => v.ImportButton));
+                d(this.BindCommand(ViewModel, vm => vm.ExportProductsCommand, v => v.ExportButton));
 
                 d(this.Bind(ViewModel, vm => vm.SelectedTabIndex, v => v.TabContainer.SelectedIndex));
 
@@ -57,19 +59,22 @@ namespace DIMS.Views
 
                 d(ViewModel!.ShowDialog.RegisterHandler(async (interaction) =>
                 {
-                    var param = new MessageBoxStandardParams
-                    {
-                        FontFamily = "Microsoft YaHei UI",
-                        Icon = MsBox.Avalonia.Enums.Icon.Warning,
-                        ContentTitle = "²Ù×÷È·ÈÏ",
-                        ContentMessage = interaction.Input,
-                        ButtonDefinitions = MsBox.Avalonia.Enums.ButtonEnum.YesNo,
-                        WindowStartupLocation = WindowStartupLocation.CenterScreen
-                    };
+                    bool result = await Dispatcher.UIThread.InvokeAsync(async () => {
+                        var param = new MessageBoxStandardParams
+                        {
+                            FontFamily = "Microsoft YaHei UI",
+                            Icon = MsBox.Avalonia.Enums.Icon.Warning,
+                            ContentTitle = "Message Dialog",
+                            ContentMessage = interaction.Input,
+                            ButtonDefinitions = MsBox.Avalonia.Enums.ButtonEnum.YesNo,
+                            WindowStartupLocation = WindowStartupLocation.CenterScreen
+                        };
 
-                    var box = MessageBoxManager.GetMessageBoxStandard(param);
+                        var box = MessageBoxManager.GetMessageBoxStandard(param);
 
-                    bool result = await box.ShowAsync() == MsBox.Avalonia.Enums.ButtonResult.Yes;
+                        return await box.ShowAsync() == MsBox.Avalonia.Enums.ButtonResult.Yes;
+                    });
+                    
                     interaction.SetOutput(result);
                 }));
 
@@ -88,6 +93,35 @@ namespace DIMS.Views
                         if (files != null && files.Count > 0)
                         {
                             interaction.SetOutput(files[0].Path.LocalPath);
+                        }
+                        else
+                        {
+                            interaction.SetOutput(null);
+                        }
+                    }
+                    else
+                    { 
+                        interaction.SetOutput(null);
+                    }
+                }));
+
+                d(ViewModel!.FileSavePicker.RegisterHandler(async (interaction) =>
+                {
+                    var top = TopLevel.GetTopLevel(this);
+                    if (top != null)
+                    {
+                        var file = await top.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions()
+                        {
+                            DefaultExtension = "csv", 
+                            ShowOverwritePrompt = true, 
+                            FileTypeChoices = new[] { new FilePickerFileType("CSV Files") { Patterns = new[] { "*.csv" }, MimeTypes = new[] { "text/csv" } } },
+                            Title = interaction.Input,
+                            SuggestedFileName = "products.csv"
+                        });
+
+                        if (file != null)
+                        {
+                            interaction.SetOutput(file.Path.LocalPath);
                         }
                         else
                         {
