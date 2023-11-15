@@ -406,7 +406,9 @@ public class MainViewModel : ViewModelBase, IDataProvider, Helpers.ILogger, IEna
 
                     case 20: // 触发扫码
                         {
-                            _cachedTrayCode = await _Scanner.GetBarcodeAsync();
+                            CancellationTokenSource cancellation = new CancellationTokenSource();
+                            cancellation.CancelAfter(3000);
+                            _cachedTrayCode = await _Scanner.GetBarcodeAsync(cancellation.Token);
                             List<string>? items = await _Rfid.ReadAsync();
 
                             if(items != null && items.Count > 0)
